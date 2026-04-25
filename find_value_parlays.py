@@ -257,8 +257,93 @@ def build_parlays(scored: list[dict], sizes=(2, 3, 4), realistic_only: bool = Tr
 
 
 # ──────────────────────────────────────────────
-# Display
+# Positive EV parlay builder
 # ──────────────────────────────────────────────
+
+# Break-even implied probability per leg for a 3-pick 6x parlay:
+#   p^3 * 6 = 1  =>  p = (1/6)^(1/3) ≈ 0.5503  (American: -122)
+BREAKEVEN_3LEG = (1 / 6) ** (1 / 3)
+
+
+def build_positive_ev_parlay(records: list[dict], size: int = 3) -> dict | None:
+    """
+    Find the highest-EV n-leg parlay from balanced lines with heavy implied
+    probability (i.e., the 'favorite' side).  One pick per game.
+
+    Because Underdog's fixed payouts (6x for 3-pick) are based on ~50%
+    per-leg assumptions, legs with implied probability >55% are mathematically
+    positive-EV when combined.
+
+    Returns a dict with legs + EV, or None if not enough qualifying legs found.
+    """
+    payout = PAYOUT_TABLE.get(size)
+    if not payout:
+        return None
+
+    breakeven = (1 / payout) ** (1 / size)
+
+    # All legs above break-even with real game context, sorted by highest prob
+    pool = [
+        r for r in records
+        if r["implied_prob"] > breakeven and r["game"]
+    ]
+    pool.sort(key=lambda r: r["implied_prob"], reverse=True)
+
+    # Pick one leg per game, one per (player, stat) pair
+    seen_games: set[str] = set()
+    seen_ps: set[tuple] = set()
+    legs: list[dict] = []
+    for r in pool:
+        key = (r["player"], r["stat"])
+        if r["game"] in seen_games or key in seen_ps:
+            continue
+        legs.append(r)
+        seen_games.add(r["game"])
+        seen_ps.add(key)
+        if len(legs) == size:
+            break
+
+    if len(legs) < size:
+        return None
+
+    combined_prob = 1.0
+    for leg in legs:
+        combined_prob *= leg["implied_prob"]
+
+    ev = combined_prob * payout - 1
+    return {
+        "size": size,
+        "payout_multiplier": payout,
+        "legs": legs,
+        "combined_prob": combined_prob,
+        "ev_per_dollar": ev,
+    }
+
+
+def print_positive_ev_parlay(parlay: dict):
+    size = parlay["size"]
+    payout = parlay["payout_multiplier"]
+    prob_pct = parlay["combined_prob"] * 100
+    ev = parlay["ev_per_dollar"]
+
+    print("\n" + "=" * 70)
+    print(f"  POSITIVE EV — {size}-PICK PARLAY")
+    print(f"  Payout: {payout}x  |  Est. hit rate: {prob_pct:.1f}%  |  EV: {ev:+.3f}/$ ({ev*100:+.1f}%)")
+    print("=" * 70)
+    for i, leg in enumerate(parlay["legs"], 1):
+        fmt = fmt_price(leg["american_price"])
+        print(f"  {i}. {leg['player']:<28}  {leg['sport']:<5}  {leg['stat']:<22}  "
+              f"{leg['choice']:<6}  {fmt:>6}  ({leg['implied_prob']*100:.1f}% implied)")
+        print(f"     Game: {leg['game']}  {leg['game_time']}")
+    print()
+    print("  WHY IT'S +EV:")
+    print(f"  The 6x fixed payout assumes ~50% per leg ({0.5**size*100:.1f}% combined).")
+    print(f"  These legs average {sum(l['implied_prob'] for l in parlay['legs'])/size*100:.1f}% implied "
+          f"→ {prob_pct:.1f}% combined → EV = {prob_pct/100:.3f} × {payout} = {parlay['combined_prob']*payout:.3f}x "
+          f"(pays back {parlay['combined_prob']*payout:.2f}x your stake on average).")
+    print("=" * 70)
+
+
 def fmt_price(p: str) -> str:
     try:
         v = int(p)
@@ -327,21 +412,23 @@ def main():
     top_by_sport = top_picks_per_sport(scored, top_n=10)
     print_value_picks(top_by_sport)
 
-    # Suggested parlays using only realistic standard-stat props
+    # ── Positive EV 3-pick parlay (main result) ──────────────────────────
+    pos_ev = build_positive_ev_parlay(records, size=3)
+    if pos_ev:
+        print_positive_ev_parlay(pos_ev)
+
+    # ── Soft-line parlays (near-even-odds props) ──────────────────────────
     parlays = build_parlays(scored, sizes=[2, 3, 4, 5], realistic_only=True)
     print_parlays(parlays)
 
     print("\n" + "=" * 70)
     print("  NOTES")
     print("  ─────")
-    print("  Edge  = 0.5 minus the house's implied probability per leg.")
-    print("          Positive = the odds favor the bettor vs a true coin flip.")
-    print("          Most balanced lines sit around -2.8% (standard -112 vig).")
-    print("          Lines at -110 or better are the 'softest' available.")
+    print("  Positive EV parlay uses legs with implied prob > break-even (~55%).")
+    print("  Underdog's 6x fixed payout is generous when legs are heavy favorites.")
     print()
-    print("  Parlays shown are 'realistic' props (standard stats, -140 to +140).")
-    print("  These have ~50% true probability per leg, compound well in parlays.")
-    print("  Picks are sourced from different games to avoid correlation risk.")
+    print("  Soft-line parlays = standard props near even-odds (-140 to +140).")
+    print("  All picks sourced from different games to avoid correlation risk.")
     print("=" * 70 + "\n")
 
 
