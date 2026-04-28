@@ -1,0 +1,5 @@
+__pycache__/
+*.pyc
+underdog-fantasy-pickem-scraper-main/
+underdog_props.csv
+.DS_Store
