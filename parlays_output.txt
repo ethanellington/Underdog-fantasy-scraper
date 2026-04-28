@@ -1,0 +1,64 @@
+Available sports (line counts):
+  TENNIS     1160
+  NBA        1055
+  NHL        913
+  MLB        758
+  PGA        327
+  NFL        259
+  WNBA       226
+  FIFA       220
+  CS         61
+  LOL        60
+  MMA        31
+  KBO        27
+  VAL        19
+  NPB        17
+  ESPORTS    10
+  MLBCOMBOS  4
+
+=== NBA Safe 3-Leg (3 legs) ===
+  1. [NBA] Julius Randle                UNDER   0.5 double_doubles         @  -455  (p=0.820)
+  2. [NBA] James Harden                 OVER   14.5 points                 @  -455  (p=0.820)
+  3. [NBA] Donovan Clingan              UNDER   0.5 double_doubles         @  -435  (p=0.813)
+  >> combined implied prob = 0.5462  |  parlay decimal odds = 1.83x  |  $10 -> $18.31
+
+=== NBA Safe 5-Leg (5 legs) ===
+  1. [NBA] Julius Randle                UNDER   0.5 double_doubles         @  -455  (p=0.820)
+  2. [NBA] James Harden                 OVER   14.5 points                 @  -455  (p=0.820)
+  3. [NBA] Donovan Clingan              UNDER   0.5 double_doubles         @  -435  (p=0.813)
+  4. [NBA] De'Aaron Fox                 OVER   12.5 points                 @  -435  (p=0.813)
+  5. [NBA] Victor Wembanyama            OVER    0.5 double_doubles         @  -417  (p=0.806)
+  >> combined implied prob = 0.3581  |  parlay decimal odds = 2.79x  |  $10 -> $27.92
+
+=== MLB Safe 4-Leg (4 legs) ===
+  1. [MLB] Taylor Walls                 UNDER   0.5 rbis                   @  -589  (p=0.855)
+  2. [MLB] Freddy Fermin                UNDER   0.5 rbis                   @  -527  (p=0.840)
+  3. [MLB] Jakob Marsee                 UNDER   0.5 rbis                   @  -500  (p=0.833)
+  4. [MLB] Owen Caissie                 UNDER   0.5 rbis                   @  -455  (p=0.820)
+  >> combined implied prob = 0.4906  |  parlay decimal odds = 2.04x  |  $10 -> $20.38
+
+=== NHL Safe 3-Leg (3 legs) ===
+  1. [NHL] Hampus Lindholm              UNDER   0.5 assists                @  -477  (p=0.826)
+  2. [NHL] Jamie Benn                   UNDER   0.5 assists                @  -455  (p=0.820)
+  3. [NHL] Zach Benson                  UNDER   0.5 goals                  @  -455  (p=0.820)
+  >> combined implied prob = 0.5553  |  parlay decimal odds = 1.80x  |  $10 -> $18.01
+
+=== Mixed-Sport 4-Leg Favorites (4 legs) ===
+  1. [MLB] Taylor Walls                 UNDER   0.5 rbis                   @  -589  (p=0.855)
+  2. [WNBA] Aliyah Boston                OVER    5.5 rebounds               @  -589  (p=0.855)
+  3. [TENNIS] Hanyu Guo                    UNDER   0.5 tie_breakers_played    @  -477  (p=0.826)
+  4. [NHL] Hampus Lindholm              UNDER   0.5 assists                @  -477  (p=0.826)
+  >> combined implied prob = 0.4990  |  parlay decimal odds = 2.00x  |  $10 -> $20.04
+
+=== Value 3-Leg (juicier prices) (3 legs) ===
+  1. [WNBA] A'ja Wilson                  OVER   24.5 points                 @  -102  (p=0.503)
+  2. [NBA] Shai Gilgeous-Alexander      OVER    5.5 period_1_first_5_min_pra @  -102  (p=0.503)
+  3. [NBA] Jamal Murray                 OVER    4.5 period_1_first_5_min_pra @  -103  (p=0.505)
+  >> combined implied prob = 0.1275  |  parlay decimal odds = 7.84x  |  $10 -> $78.41
+
+=== Longshot 3-Leg (high payout) (3 legs) ===
+  1. [NHL] Ian Cole                     OVER    0.5 goals                  @ +2840  (p=0.034)
+  2. [NHL] Kaedan Korczak               OVER    0.5 goals                  @ +2840  (p=0.034)
+  3. [NHL] Rasmus Andersson             OVER    0.5 period_first_goal_scorer @ +2820  (p=0.034)
+  >> combined implied prob = 0.0000  |  parlay decimal odds = 25239.31x  |  $10 -> $252393.12
+
